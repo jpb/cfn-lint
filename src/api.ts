@@ -17,8 +17,8 @@ const defaultOptions: ValidationOptions = {
 
 /**
  * Synchronously validates a CloudFormation yaml or json file.
- * @param fileName 
- * @param options 
+ * @param fileName
+ * @param options
  */
 export function validateFile(fileName: string, options?: Partial<ValidationOptions>): ValidationResult {
   setupValidator(options);
@@ -26,10 +26,21 @@ export function validateFile(fileName: string, options?: Partial<ValidationOptio
 }
 
 /**
+ * Synchronously validates a CloudFormation yaml or json string.
+ * @param contents
+ * @param filename
+ * @param options
+ */
+export function validateString(contents: string, filename: string, options?: Partial<ValidationOptions>): ValidationResult {
+  setupValidator(options);
+  return validator.validateString(contents, filename, options);
+}
+
+/**
  * Synchronously validates an object. The object should be what you
  * get from JSON.parse-ing or yaml.load-ing a CloudFormation template.
  * @param objectToValidate
- * @param options 
+ * @param options
  */
 export function validateJsonObject(objectToValidate: any, options?: Partial<ValidationOptions>): ValidationResult {
   setupValidator(options);

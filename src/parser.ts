@@ -11,26 +11,33 @@ export function openFile(path: string){
         throw Error(`Could not find file ${path}. Check the input path.`);
     }
 
-    // Try JSON loading
-    try {
-        return openJson(path);
-    }catch (e){
-
-    }
-
-    // Try YAML loading
-    try {
-        return openYaml(path);
-    }catch (e){
-        throw Error(`Could not determine file type. Check your template is not malformed. ${e.message}`);
-    }
+    return openString(fs.readFileSync(path, 'utf8'), path);
 
 };
 
-function openYaml(path: string){
+
+export function openString(contents: string, filename: string){
+
+  // Try JSON loading
+  try {
+    return openJson(contents);
+  }catch (e){
+
+  }
+
+  // Try YAML loading
+  try {
+    return openYaml(contents, filename);
+  }catch (e){
+    throw Error(`Could not determine file type. Check your template is not malformed. ${e.message}`);
+  }
+
+}
+
+function openYaml(contents: string, path: string){
 
     // Try and load the Yaml
-    let yamlParse = yaml.safeLoad(fs.readFileSync(path, 'utf8'), {
+    let yamlParse = yaml.safeLoad(contents, {
         filename: path,
         schema: yamlSchema,
         onWarning: (warning) => {
@@ -47,8 +54,8 @@ function openYaml(path: string){
 
 }
 
-function openJson(path: string){
+function openJson(contents: string){
 
-    return JSON.parse(fs.readFileSync(path, 'utf8'));
+    return JSON.parse(contents);
 
 }
